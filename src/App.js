@@ -1,25 +1,38 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import LaunchProgram from "./Components/LaunchProgram";
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      launchPrograms: []
+    }
+  }
+
+  componentDidMount() {
+    this.fetchLaunchProgram();
+  }
+
+  fetchLaunchProgram = () => {
+    fetch(`https://api.spacexdata.com/v3/launches?limit=100`)
+    .then(res => res.json())
+    .then(launchPrograms => this.setState({launchPrograms}))
+  }
+
+
+  render() {
+    const {launchPrograms} = this.state;
+      return (
+        <div className="program-grid">
+        {launchPrograms.map((launchProgram,index) => (
+          <LaunchProgram key={index} {...launchProgram} />
+        ))}
+        </div>
+      )
+  }
 }
+  
 
 export default App;
